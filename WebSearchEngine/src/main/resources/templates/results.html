@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  	<title>Bingle Search</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet"></link>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" media="all" th:href="@{/css/results.css}" />
+	<!--<script type="text/javascript" th:src="@{/js/tester.js}"></script>-->
+	<link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css' />
+	
+</head>
+<body>
+	<!-- Header Bar -->
+	<div id="bar-container">
+		<!--Logo and link to homepage-->
+		<a th:href="@{/}">
+			<div id="bar-logo-box" class="pull-left right-bar-border ">
+				<img id="header_logo_image" th:src="@{/images/logo.png}" alt="bingle_logo"/>
+			</div>
+		</a>
+
+		<!--Search bar-->
+		<div id="search-outer-box">
+			<div id="bar-gly-box">
+				<div id="mag-glass-gly" class="glyphicon glyphicon-search pull-left" aria-hidden="true"></div>
+			</div>
+			<div id="bar-search-box">
+				<form th:action="@{/}" id="bar-search" class="pull-left" method="get"> 
+					<input id="bar-search-input" type="text" placeholder="What would you like to know?" name="search" />
+				</form>
+			</div>
+		</div>	
+
+		<!--Extra Buttons if Needed-->
+			<div id="account-button-box" class="pull-right left-bar-border">
+				<a th:href="@{/random}">
+					<button type="submit" class="bar-button">
+						<span class="glyphicon glyphicon-flash" id="random-gly" aria-hidden="true"></span>
+					</button>
+				</a>
+			</div>
+	</div>
+	
+	
+	<div class="container">
+		<div class="row" id="results-div">
+			<h2 th:text="${queryHeader}"></h2>
+			<div class="col-xs-7">
+				<div th:each="result : ${resultsList}" class="result">
+					<h3> <a th:href="@{${result.getUrl()}}"><span th:text="${result.getPreviewName()}" class="preview-trigger" th:id="${result.getUrl()}"></span></a> </h3>
+					<p th:text="${result.getUrl()}"></p>
+					<p th:if="${demo}" th:text="'Weight: ' + ${result.getWeightedValue()} + ' PageRank: ' + ${result.getPageRank()} + ' TFIDF: ' + ${result.getTfidf()}"/>
+				</div>
+			</div>
+			<div class="col-xs-5" id="iframe-box">
+				<iframe name="ifrm" id="ifrm" src="http://www.bingle.duckdns.org/" frameborder="0">
+			    </iframe>
+			</div>
+		</div>
+		<div class="row text-center">
+			<ul class="pagination">
+			    <li th:each="link : ${paginationLinks}">
+			    	<a th:href="@{${link[0]}}"><span th:class="${link[1] == 'F'} ? 'glyphicon glyphicon-forward' : 'glyphicon glyphicon-backward'" aria-hidden="true"></span></a>
+			    </li>
+		  	</ul>
+		</div>
+	  
+	</div>
+	
+	<script>
+		$('.preview-trigger').on('mouseover', function(){
+			var url = event.target.id;
+			console.log(url);
+			$("#ifrm").attr('src', url);
+		});
+		$("#info").click(function(){
+			$("#ifrm").attr('src', "http://www.sanwebe.com/2013/03/ajax-pagination-with-jquery-php"); 
+		});
+	</script>
+</body>
+</html>

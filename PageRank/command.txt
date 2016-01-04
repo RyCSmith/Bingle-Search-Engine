@@ -1,0 +1,1 @@
+~/dev/vendor/spark-1.5.2/bin/spark-submit --class "edu.upenn.cis.cis455.pagerank.PageRank" --master local[4] pagerank.jar

@@ -1,0 +1,132 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  	<title>Bingle Search</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet"></link>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" media="all" th:href="@{/css/home.css}" />
+	<!--<script type="text/javascript" th:src="@{/js/tester.js}"></script>-->
+	<link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css' />
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places;key=AIzaSyCKmoe_Od-btFH7EnZs2_CCfbcePo2suP8;"></script>
+</head>
+<body>
+
+<!-- Top Panel -->
+<div class="top-panel top-push-closed">
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12">
+			<h2 class="text-center">SETTINGS</h2>
+			<p class="text-center">Use the toggle to enable debug mode for your session. </p>
+			<div class="four">
+			  <div th:class="${demo} ? 'button-wrap button-active' : 'button-wrap'">
+			    <div class="button-bg">
+			      <div class="button-out"></div>
+			      <div class="button-in"></div>
+			      <div class="button-switch"></div>
+			    </div>
+			  </div>
+			</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Side Panel -->
+<div class="panel left-push-closed" id="side-panel">
+	<h2>ABOUT BINGLE</h2>
+	<p>Bingle is a distributed search engine designed by Josh Fried, Josh Kessler, Max
+	Tromhauer and Ryan Smith. Some further details can be found below. </p>
+	<h3>Search Engine</h3>
+	<ul>
+	<li>Built in Spring (based on Servlets) using Spring-Boot</li>
+	<li>Runs on embedded Tomcat server deployed on EC2.</li>
+	<li>EHCache for query and database call caching.</li>
+	<li>Demo mode can be activated using above settings dropdown.</li>
+	<li>Random search from the results page.</li>
+	<li>Bootstrap and Thymeleaf used in front end.</li>
+	</ul>
+</div>
+
+<!-- Main Container -->
+<div class="main">
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12">
+				<div id="header">
+					<div class="pull-right" id="bar-spacer"></div>
+					<span class="glyphicon glyphicon-menu-hamburger pull-right" id="gear" aria-hidden="true"></span>
+					<span class="glyphicon glyphicon-info-sign pull-right" id="info" aria-hidden="true"></span>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 text-center">
+				<img id="logo" th:src="@{/images/logo.png}" alt="bingle_logo"/>
+				<!-- Search Form -->
+				<form th:action="@{/}">
+					<input id="search-input" type="text" name="search" placeholder="What would you like to know?"></input>
+					<div id="mag-box" class="text-center">
+						<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+					</div>
+					<br/>
+				    <input id="search-button" type="submit" value="Bingle Search"></input>
+				</form>	
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	$("#info").click(function(){
+		if($(".top-push-closed").hasClass('top-push-active')) {
+			$(".top-push-closed").toggleClass('top-push-active');
+			$(".main").toggleClass('top-active');
+		}
+		  $(".left-push-closed").toggleClass('left-push-active');
+		  $(".main").toggleClass('about-active');
+		  $("#bar-spacer").toggleClass('add-space');
+	});
+	$("#gear").click(function(){
+		if($(".left-push-closed").hasClass('left-push-active')) {
+			$(".left-push-closed").toggleClass('left-push-active');
+			$(".main").toggleClass('about-active');
+			$("#bar-spacer").toggleClass('add-space');
+		}
+		  $(".top-push-closed").toggleClass('top-push-active');
+		  $(".main").toggleClass('top-active');
+	});
+</script>
+<script type="text/javascript">
+	var defaultBounds = new google.maps.LatLngBounds(
+		  new google.maps.LatLng(-33.8902, 151.1759),
+		  new google.maps.LatLng(-33.8474, 151.2631));
+
+		var input = document.getElementById('search-input');
+
+		var searchBox = new google.maps.places.SearchBox(input, {
+		  bounds: defaultBounds
+		});
+</script>
+<script type="text/javascript">
+  $('.button-wrap').on("click", function(){
+    $(this).toggleClass('button-active');
+    $.ajax({
+        url : "setdemo",
+        type : "POST", 
+        data : {'setting': 'true'},
+
+        success : function(json) {
+        },
+
+        error : function(xhr,errmsg,err) {
+        	$(this).toggleClass('button-active');
+        }
+    });
+
+  });
+</script>
+</body>
+</html>
